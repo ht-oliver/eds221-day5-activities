@@ -1,0 +1,43 @@
+---
+title: "Runoff Volumes"
+author: "Henry Oliver"
+date: "2025-08-15"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+library(tidyverse)
+library(here)
+```{r}
+
+source(here::here("src", "storm_runoff.R"))
+
+Rd <- 1
+
+impervious_fractions <- seq(from = 0.6, to = 0.8, by = 0.01)
+
+#empty_vector <- length(impervious_fractions) 
+
+sol <- predict_runoff(Rd, impervious_fractions, 182)
+sol
+
+df <- data.frame(impervious_fractions, sol)
+df
+
+ggplot(df, aes(x = impervious_fractions, y = sol)) +
+  geom_point() +
+  geom_line() +
+  labs(title = "Expected Stormwater Runoff as a Function of Impervious Cover", x = "Fraction of Watershed area considered Impervious (Acres)", y = "Expected Volume of Stormwater Runoff")
+
+
+```
+
+```{r}
+
+```
+
+
+    
