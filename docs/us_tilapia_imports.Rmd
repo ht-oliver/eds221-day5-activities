@@ -1,0 +1,53 @@
+---
+title: "US Tilapia Imports"
+author: "Henry Oliver"
+date: "2025-08-15"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+#library(tidyverse)
+#library(here)
+#library(janitor)
+
+us_tilapia_imports <- read_csv(here::here("src", "us_tilapia_imports.csv"))
+
+us_tilapia_imports
+
+summary(us_tilapia_imports)
+names(us_tilapia_imports)
+dim(us_tilapia_imports)
+skimr::skim(us_tilapia_imports)
+
+
+long_tilapia <- us_tilapia_imports %>%
+pivot_longer(cols = '1992':'2018', names_to = "year", values_to = "tilapia_volume_kpounds") %>% 
+  mutate(year =                                                                          as.numeric(year)) 
+
+
+yearly_tilapia_tot <- long_tilapia %>% dplyr::group_by(year) %>% summarize (total = sum(tilapia_volume_kpounds, na.rm = TRUE))
+
+yearly_tilapia_tot
+
+ggplot(yearly_tilapia_tot, aes( x = year, y = total)) +
+         geom_line() +
+         labs(title = "Total US Tilapia Imports 1992-2018", x = "Year", y = "No. of Tilapia Imports")
+
+
+subset <- data.frame(dplyr::filter(long_tilapia, country ==  c("Ecuador", "Honduras", "Costa Rica", "Mexico"), na.rm = TRUE))
+
+plot <- ggplot(data = subset, aes(x = year, y = tilapia_volume_kpounds)) +
+  geom_point() +
+  geom_line(aes(color = country)) +
+  labs(title = "nice", x = "uuugh", y = "yeehaw")
+
+plot
+
+
+
+```
+
